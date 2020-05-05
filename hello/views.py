@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 import requests
 import os, json, boto3
 from botocore.client import Config
@@ -14,7 +15,7 @@ from . import models, forms
 def index(request):
     # return HttpResponse('Hello from Python!')
     return render(request, "index.html")
-    
+    #return HttpResponseRedirect(reverse("submit_form"))
     #r = requests.get('http://httpbin.org/status/418')
     #print(r.text)
     #return HttpResponse('<pre>' + r.text + '</pre>')
@@ -55,6 +56,7 @@ def sign_s3(request):
     return HttpResponse( json.dumps({
         "data": presigned_post,
         "url": 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name),
+        "key": file_name,
     }), content_type="text/json")
 
 def get_image_url(request):
